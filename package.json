@@ -15,6 +15,7 @@
   "type": "commonjs",
   "main": "src/index.js",
   "scripts": {
+    "link-cli": "npm link"
   },
   "bin": {
     "vscode-utilities": "src/index.js",
