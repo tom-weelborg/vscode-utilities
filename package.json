@@ -17,6 +17,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "bin": {
+    "vscode-utilities": "src/index.js",
+    "vscu": "src/index.js"
+  },
   "dependencies": {
     "commander": "^14.0.3"
   }
