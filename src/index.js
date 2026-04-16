@@ -10,4 +10,6 @@ program
 	.version('1.0.0')
 	.option('-c, --codium');
 
+require('./cli/extensions')(program);
+
 program.parse();
