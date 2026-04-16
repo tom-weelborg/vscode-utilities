@@ -11,5 +11,6 @@ program
 	.option('-c, --codium', 'enables usage of VSCodium');
 
 require('./cli/extensions')(program);
+require('./cli/tabs')(program);
 
 program.parse();
