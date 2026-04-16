@@ -8,7 +8,7 @@ program
 	.name('vscode-utilities')
 	.description('CLI to some Visual Studio Code utilities')
 	.version('1.0.0')
-	.option('-c, --codium');
+	.option('-c, --codium', 'enables usage of VSCodium');
 
 require('./cli/extensions')(program);
 
