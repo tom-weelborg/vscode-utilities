@@ -1,0 +1,20 @@
+{
+  "name": "vscode-utilities",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/tom-weelborg/vscode-utilities#readme",
+  "bugs": {
+    "url": "https://github.com/tom-weelborg/vscode-utilities/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tom-weelborg/vscode-utilities.git"
+  },
+  "license": "GPL-3.0-or-later",
+  "author": "Tom Weelborg",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
