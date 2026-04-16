@@ -1,7 +1,7 @@
 {
   "name": "vscode-utilities",
   "version": "1.0.0",
-  "description": "",
+  "description": "CLI to some Visual Studio Code utilities",
   "homepage": "https://github.com/tom-weelborg/vscode-utilities#readme",
   "bugs": {
     "url": "https://github.com/tom-weelborg/vscode-utilities/issues"
