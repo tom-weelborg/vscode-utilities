@@ -103,6 +103,22 @@ function getVscodeProgramName(useCodium) {
     }
 }
 
+async function prefetch(url) {
+    if (await isNixOS()) {
+        const base32 = execSync(`nix-prefetch-url ${url}`, {
+            encoding: 'utf8'
+        }).trim();
+
+        const sri = execSync(`nix hash to-sri --type sha256 ${base32}`, {
+            encoding: 'utf8'
+        }).trim();
+
+        return sri.replace('sha256-', '');
+    } else {
+        return 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=';
+    }
+}
+
 async function getWorkspacesInformation(useCodium) {
     const workspacesDir = getWorkspacesDirectoryName(useCodium);
 
@@ -187,6 +203,7 @@ async function writeToFileAbsolute(filePath, data) {
 module.exports = {
     getExtensions,
     getWorkspacesInformation,
+    prefetch,
     writeToFileRelative,
     writeToFileAbsolute,
 };
