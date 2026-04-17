@@ -1,3 +1,4 @@
+const { execSync } = require('child_process');
 const fs = require('fs/promises');
 const os = require('os');
 const path = require('path');
@@ -6,13 +7,23 @@ const home = os.homedir();
 const platform = os.platform();
 
 async function getExtensions(useCodium) {
-    let extensionsFromHome;
+    const extensionsFromHome = await getExtensionsFromHome(useCodium);
+    const extensionsFromNixStore = await getExtensionsFromNixStore(useCodium);
+
+    return [
+        ...extensionsFromHome,
+        ...extensionsFromNixStore,
+    ];
+}
+
+async function getExtensionsFromHome(useCodium) {
     try {
-        extensionsFromHome = await getExtensionsFile(useCodium);
+        return JSON.parse(
+            await getExtensionsFile(useCodium)
+        );
     } catch {
-        extensionsFromHome = '[]';
+        return [];
     }
-    return JSON.parse(extensionsFromHome);
 }
 
 async function getExtensionsFile(useCodium) {
@@ -25,6 +36,70 @@ function getVscodeDirectoryName(useCodium) {
         return '.vscode-oss';
     } else {
         return '.vscode';
+    }
+}
+
+async function getExtensionsFromNixStore(useCodium) {
+    if (await isNixOS()) {
+        try {
+            const extensionsFromNixStore = await getExtensionsFileFromNixStore(useCodium);
+            if (extensionsFromNixStore) {
+                return JSON.parse(extensionsFromNixStore);
+            }
+        } catch {
+        }
+    }
+    return [];
+}
+
+async function isNixOS() {
+    try {
+        const data = await fs.readFile('/etc/os-release', 'utf8');
+        return data.includes('ID=nixos');
+    } catch {
+        return false;
+    }
+}
+
+async function getExtensionsFileFromNixStore(useCodium) {
+    const file = await getExtensionsFileFromNixStorePath(useCodium);
+    if (file) {
+        return await fs.readFile(file, 'utf8');
+    } else {
+        return null;
+    }
+}
+
+async function getExtensionsFileFromNixStorePath(useCodium) {
+    const vscodeFile = await getVscodeFileFromNixStore(useCodium);
+    if (!vscodeFile) {
+        return null;
+    }
+
+    const extensionsDir = vscodeFile.match(/--extensions-dir\s+([^\s"]+)/);
+    if (extensionsDir && extensionsDir[1]) {
+        return `${extensionsDir[1]}/extensions.json`;
+    } else {
+        return null;
+    }
+}
+
+async function getVscodeFileFromNixStore(useCodium) {
+    try {
+        const vscodePath = execSync(`which ${getVscodeProgramName(useCodium)}`, {
+            encoding: 'utf8'
+        }).trim();
+        return await fs.readFile(vscodePath, 'utf8');
+    } catch {
+        return null;
+    }
+}
+
+function getVscodeProgramName(useCodium) {
+    if (useCodium) {
+        return 'codium';
+    } else {
+        return 'code';
     }
 }
 
