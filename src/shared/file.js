@@ -5,6 +5,16 @@ const path = require('path');
 const home = os.homedir();
 const platform = os.platform();
 
+async function getExtensions(useCodium) {
+    let extensionsFromHome;
+    try {
+        extensionsFromHome = await getExtensionsFile(useCodium);
+    } catch {
+        extensionsFromHome = '[]';
+    }
+    return JSON.parse(extensionsFromHome);
+}
+
 async function getExtensionsFile(useCodium) {
     const file = path.join(home, getVscodeDirectoryName(useCodium), 'extensions/extensions.json');
     return await fs.readFile(file, 'utf8');
@@ -100,7 +110,7 @@ async function writeToFileAbsolute(filePath, data) {
 }
 
 module.exports = {
-    getExtensionsFile,
+    getExtensions,
     getWorkspacesInformation,
     writeToFileRelative,
     writeToFileAbsolute,

@@ -1,6 +1,6 @@
 const { Option } = require('commander');
 
-const { getExtensionsFile, writeToFileRelative } = require('../shared/file');
+const { getExtensions, writeToFileRelative } = require('../shared/file');
 
 module.exports = (program) => {
     program
@@ -22,10 +22,8 @@ module.exports = (program) => {
         .option('-e, --export-file <path>', 'exports the extensions to a file at the given relative path')
         .action(({ id, nix, exportFile }) => {
             const { codium } = program.opts();
-            getExtensionsFile(codium)
-                .then(text => {
-                    const extensions = JSON.parse(text);
-
+            getExtensions(codium)
+                .then(extensions => {
                     let result = extensions;
                     if (id) {
                         result = result.map(e => e.identifier.id);
