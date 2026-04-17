@@ -15,6 +15,7 @@
   "type": "commonjs",
   "main": "src/index.js",
   "scripts": {
+    "build": "npm i",
     "link-cli": "npm link",
     "start": "node src/index.js"
   },
