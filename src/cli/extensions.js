@@ -1,5 +1,6 @@
 const { Option } = require('commander');
 
+const { mapToId, mapToNix } = require('../shared/extensions');
 const { getExtensions, prefetch, writeToFileRelative } = require('../shared/file');
 
 module.exports = (program) => {
@@ -26,19 +27,9 @@ module.exports = (program) => {
                 .then(async extensions => {
                     let result = extensions;
                     if (id) {
-                        result = result.map(e => e.identifier.id);
+                        result = mapToId(result);
                     } else if (nix) {
-                        result = await Promise.all(result.map(async e => {
-                            const id = e.identifier.id.split('.');
-                            return {
-                                name: id[1],
-                                publisher: id[0],
-                                version: e.version,
-                                sha256: await prefetch(
-                                    `https://marketplace.visualstudio.com/_apis/public/gallery/publishers/${id[0]}/vsextensions/${id[1]}/${e.version}/vspackage`
-                                )
-                            };
-                        }));
+                        result = await mapToNix(result);
                     }
                     
                     if (exportFile) {
