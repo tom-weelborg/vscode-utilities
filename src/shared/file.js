@@ -200,10 +200,20 @@ async function writeToFileAbsolute(filePath, data) {
     await fs.writeFile(filePath, data, 'utf8');
 }
 
+async function readFiles(paths) {
+    return await Promise.all(
+        paths.map(async (p) => {
+            const fullPath = path.resolve(p);
+            return await fs.readFile(fullPath, 'utf8');
+        })
+    );
+}
+
 module.exports = {
     getExtensions,
     getWorkspacesInformation,
     prefetch,
+    readFiles,
     writeToFileRelative,
     writeToFileAbsolute,
 };
